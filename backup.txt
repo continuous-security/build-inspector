@@ -1,0 +1,26 @@
+/bin
+/boot
+/etc
+/home
+/lib
+/opt
+/root
+/sbin
+/selinux
+/srv
+/usr
+/var
+- /dev
+- /lost+found
+- /media
+- /mnt
+- /proc
+- /run
+- /sys
+- /tmp
+- /vagrant
+- /var/lock
+- /var/run
+- /var/tmp
+- /var/log
+- /backup
