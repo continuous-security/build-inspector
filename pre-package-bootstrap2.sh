@@ -14,3 +14,6 @@ echo rvm_install_on_use_flag=1 >> /home/vagrant/.rvmrc
 source /home/vagrant/.rvm/scripts/rvm
 rvm use --install 2.2.1
 gem install bundler
+
+
+echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config

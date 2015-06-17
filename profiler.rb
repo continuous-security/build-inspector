@@ -38,14 +38,13 @@ commands << "cd #{VagrantWhisperer::REPO_DIR}"
 
 # Add repo to backup so we can diff later
 commands << 'echo Preparing snapshot ...'
-commands << 'rdiff-backup --include-filelist /home/vagrant/snapshot-targets.txt / /backup'
+commands << "sudo rdiff-backup --include-filelist #{VagrantWhisperer::HOME}/snapshot-targets.txt / #{VagrantWhisperer::BACKUP_DIR}"
 
-# Begin network monitoring
 commands << 'echo "Starting network monitoring ..."'
-commands << 'sudo tcpdump -w /evidence/evidence.pcap -i eth0 &disown'
+commands << "sudo tcpdump -w #{VagrantWhisperer::EVIDENCE_DIR}/evidence.pcap -i eth0 &disown"
 
 # Record all processes to diff later
-commands << 'ps aux --sort=lstart > /evidence/ps-before.txt'
+commands << "ps --sort=lstart -eopid,tt,cmd > #{VagrantWhisperer::EVIDENCE_DIR}/ps-before.txt"
 
 commands << build_cmd
 
@@ -56,13 +55,10 @@ puts "Should be sleeping for #{options[:duration]} minutes while we wait for bui
 #sleep(options[:duration])
 
 commands.clear
-commands << "rdiff-backup --list-changed-since #{options[:duration] + 1}M /backup > /evidence/fs-diff.txt"
-
-# TODO: for each file in rdiff backup, diff it and append into evidence
-
-# TODO: not yet
-#commands << "vagrant destroy"
-
+commands << 'pkill tcpdump'
+commands << "ps --sort=lstart -eopid,tt,cmd > #{VagrantWhisperer::EVIDENCE_DIR}/ps-after.txt"
+get_current_mirror = "`sudo rdiff-backup --list-increments /backup |  awk -F\": \" '$1 == \"Current mirror\" {print $2}'`"
+commands << "sudo rdiff-backup --include-filelist #{VagrantWhisperer::HOME}/snapshot-targets.txt --compare-at-time \"#{get_current_mirror}\" / #{VagrantWhisperer::BACKUP_DIR} > #{VagrantWhisperer::EVIDENCE_DIR}/fs-diff.txt"
 whisperer.runCommands(commands)
 
 # collect /evidence
@@ -72,3 +68,6 @@ whisperer.runCommands(commands)
 # diff ps
 
 # diff fs
+
+# TODO: not yet, maybe make optional
+#commands << "vagrant destroy"

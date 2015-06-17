@@ -1,6 +1,8 @@
 class VagrantWhisperer
     HOME = '/home/vagrant'
     REPO_DIR = "#{HOME}/repo"
+    EVIDENCE_DIR = "/evidence"
+    BACKUP_DIR = "/backup"
 
     def initialize
         @ssh_opts = parse_ssh_config(`vagrant ssh-config`)
@@ -10,24 +12,26 @@ class VagrantWhisperer
     def runCommands(commands)
         file_path = 'tmp_runCommands.sh'
         dest_path = "#{HOME}/#{file_path}"
-        tf = File.new(file_path, 'w')
-        tf.write "#!/bin/bash\n"
-        commands.each do |cmd|
-            puts "#{cmd}\n"
-            tf.write "#{cmd}\n"
-        end
+        commands.unshift "#!/bin/bash"
+        commands << "rm #{dest_path}"
+
+        File.open(file_path, 'w') { |f| commands.each { |cmd| f.write "#{cmd}\n" } }
         sendFile(file_path, dest_path)
         File.delete(file_path)
 
         `vagrant ssh --command "chmod +x #{dest_path}"`
-        `vagrant ssh --command "./#{file_path}"`
+
+        # Stream output as we get it
+        $stdout.sync = true
+        args = ['vagrant', 'ssh', '--command', "./#{file_path}"]
+        IO.popen(args) { |f| puts f.gets until f.eof? }
+
         `vagrant ssh --command "rm #{dest_path}"`
     end
 
     def sendFile(local_path, remote_path)
         opts_str = @ssh_opts.map { |k,v| "-o #{k}=#{v}"}.join(' ')
         cmd = "scp #{opts_str} #{local_path} #{@ssh_opts['User']}@#{@ssh_opts['HostName']}:#{remote_path}"
-        puts cmd
         `#{cmd}`
     end
 
