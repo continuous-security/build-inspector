@@ -37,7 +37,7 @@ vagrant sandbox rollback
 Usage profiler.rb [options] <git repo URL> <build command>
     -h, --help                       Display this screen
     -d, --duration #                 Wait this long after building before stopping, in minutes, default=15
-    ```
+```
 
 Example usage:
 ```
