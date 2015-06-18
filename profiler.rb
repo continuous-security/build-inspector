@@ -37,7 +37,7 @@ commands << "git clone #{repo} #{VagrantWhisperer::REPO_DIR}"
 commands << "cd #{VagrantWhisperer::REPO_DIR}"
 
 # Add repo to backup so we can diff later
-commands << 'echo Preparing snapshot ...'
+commands << 'echo Preparing file system snapshot ...'
 commands << "sudo rdiff-backup --include-filelist #{VagrantWhisperer::HOME}/snapshot-targets.txt / #{VagrantWhisperer::BACKUP_DIR}"
 
 # Record all processes to diff later
