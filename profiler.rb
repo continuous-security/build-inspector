@@ -40,11 +40,11 @@ commands << "cd #{VagrantWhisperer::REPO_DIR}"
 commands << 'echo Preparing snapshot ...'
 commands << "sudo rdiff-backup --include-filelist #{VagrantWhisperer::HOME}/snapshot-targets.txt / #{VagrantWhisperer::BACKUP_DIR}"
 
+# Record all processes to diff later
+commands << "ps --sort=lstart -eott,cmd > #{VagrantWhisperer::EVIDENCE_DIR}/ps-before.txt"
+
 commands << 'echo "Starting network monitoring ..."'
 commands << "sudo tcpdump -w #{VagrantWhisperer::EVIDENCE_DIR}/evidence.pcap -i eth0 &disown"
-
-# Record all processes to diff later
-commands << "ps --sort=lstart -eopid,tt,cmd > #{VagrantWhisperer::EVIDENCE_DIR}/ps-before.txt"
 
 commands << build_cmd
 
@@ -56,12 +56,14 @@ puts "Should be sleeping for #{options[:duration]} minutes while we wait for bui
 
 commands.clear
 commands << 'pkill tcpdump'
-commands << "ps --sort=lstart -eopid,tt,cmd > #{VagrantWhisperer::EVIDENCE_DIR}/ps-after.txt"
+commands << "ps --sort=lstart -eott,cmd > #{VagrantWhisperer::EVIDENCE_DIR}/ps-after.txt"
 get_current_mirror = "`sudo rdiff-backup --list-increments /backup |  awk -F\": \" '$1 == \"Current mirror\" {print $2}'`"
 commands << "sudo rdiff-backup --include-filelist #{VagrantWhisperer::HOME}/snapshot-targets.txt --compare-at-time \"#{get_current_mirror}\" / #{VagrantWhisperer::BACKUP_DIR} > #{VagrantWhisperer::EVIDENCE_DIR}/fs-diff.txt"
+commands << %Q~ruby -e 'IO.readlines("/evidence/fs-diff.txt").each { |e| puts e; o,f = e.strip.split(": "); puts `diff -u /\#{f} /backup/\#{f}` if o.eql?("changed") && File.exists?("/"+f) && !File.directory?("/"+f)}' > #{VagrantWhisperer::EVIDENCE_DIR}/fs-diff-with-changes.txt~
+
 whisperer.runCommands(commands)
 
-# collect /evidence
+whisperer.collectEvidence
 
 # parse pcap
 

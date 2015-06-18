@@ -25,3 +25,4 @@
 - /var/log
 - /backup
 - /evidence
+- /home/vagrant/tmp_runCommands.sh

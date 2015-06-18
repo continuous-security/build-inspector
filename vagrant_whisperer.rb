@@ -6,7 +6,6 @@ class VagrantWhisperer
 
     def initialize
         @ssh_opts = parse_ssh_config(`vagrant ssh-config`)
-        #{}`vagrant ssh-config | awk -v ORS=' ' '{print "-o " $1 "=" $2}'`
     end
 
     def runCommands(commands)
@@ -29,9 +28,21 @@ class VagrantWhisperer
         `vagrant ssh --command "rm #{dest_path}"`
     end
 
+    def collectEvidence
+        runCommands(["zip -r #{HOME}/evidence.zip /evidence"])
+
+        getFile("#{HOME}/evidence.zip")
+    end
+
     def sendFile(local_path, remote_path)
         opts_str = @ssh_opts.map { |k,v| "-o #{k}=#{v}"}.join(' ')
         cmd = "scp #{opts_str} #{local_path} #{@ssh_opts['User']}@#{@ssh_opts['HostName']}:#{remote_path}"
+        `#{cmd}`
+    end
+
+    def getFile(remote_path, local_path = '.')
+        opts_str = @ssh_opts.map { |k,v| "-o #{k}=#{v}"}.join(' ')
+        cmd = "scp #{opts_str} #{@ssh_opts['User']}@#{@ssh_opts['HostName']}:#{remote_path} #{local_path}"
         `#{cmd}`
     end
 
