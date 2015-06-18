@@ -3,38 +3,46 @@
 ## Requirements
 If you don't have `brew cask` installed, run this:
 ```
-brew tap phinze/homebrew-cask && brew install brew-cask```
+brew tap phinze/homebrew-cask && brew install brew-cask
+```
 
 If you don't have `vagrant` installed, run this:
 ```
-brew cask install vagrant```
+brew cask install vagrant
+```
 
 This tool also makes use of the `sahara` plugin for snapshots. Install with this:
 ```
-vagrant plugin install sahara```
+vagrant plugin install sahara
+```
 
 ## Running
 First, clone this repo and move inside the repo directory. Since this tool does not manage vagrant for you, yet, you'll have to do it yourself. This step will take a while the first time, but won't be necessary again. Eventually, this step will be eliminated. Start vagrant and build the image:
 ```
-vagrant up```
+vagrant up
+```
 
 Once vagrant is started, save a snapshot with:
 ```
-vagrant sandbox on```
+vagrant sandbox on
+```
 
 Until this can be automated, you must run this after **each** run of this tool:
 ```
-vagrant sandbox rollback```
+vagrant sandbox rollback
+```
 
 ## Usage
 ```
 Usage profiler.rb [options] <git repo URL> <build command>
     -h, --help                       Display this screen
-    -d, --duration #                 Wait this long after building before stopping, in minutes, default=15```
+    -d, --duration #                 Wait this long after building before stopping, in minutes, default=15
+    ```
 
 Example usage:
 ```
-ruby profiler.rb https://github.com/CalebFenton/TotallyLegitApp.git "./gradlew build; ./gradlew backdoor"```
+ruby profiler.rb https://github.com/CalebFenton/TotallyLegitApp.git "./gradlew build; ./gradlew backdoor"
+```
 
 The above project has a task called `backdoor` that adds a reverse connect shell to `~/.bashrc`.
 
