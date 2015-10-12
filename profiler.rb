@@ -57,7 +57,7 @@ puts "Should be sleeping for #{options[:duration]} minutes while we wait for bui
 commands.clear
 commands << 'pkill tcpdump'
 commands << "ps --sort=lstart -eott,cmd > #{VagrantWhisperer::EVIDENCE_DIR}/ps-after.txt"
-get_current_mirror = "`sudo rdiff-backup --list-increments /backup |  awk -F\": \" '$1 == \"Current mirror\" {print $2}'`"
+get_current_mirror = "`sudo rdiff-backup --list-increments #{VagrantWhisperer::BACKUP_DIR} |  awk -F\": \" '$1 == \"Current mirror\" {print $2}'`"
 commands << "sudo rdiff-backup --include-filelist #{VagrantWhisperer::HOME}/snapshot-targets.txt --compare-at-time \"#{get_current_mirror}\" / #{VagrantWhisperer::BACKUP_DIR} > #{VagrantWhisperer::EVIDENCE_DIR}/fs-diff.txt"
 commands << %Q~ruby -e 'IO.readlines("/evidence/fs-diff.txt").each { |e| puts e; o,f = e.strip.split(": "); puts `diff -u /\#{f} /backup/\#{f}` if o.eql?("changed") && File.exists?("/"+f) && !File.directory?("/"+f)}' > #{VagrantWhisperer::EVIDENCE_DIR}/fs-diff-with-changes.txt~
 
