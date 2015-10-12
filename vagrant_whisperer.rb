@@ -29,9 +29,12 @@ class VagrantWhisperer
     end
 
     def collectEvidence
-        runCommands(["zip -r #{HOME}/evidence.zip /evidence"])
+        timestamp = Time.now.strftime("%Y%m%d%H%M%S")
+        evidence_zip_filename = "#{timestamp}-evidence.zip"
 
-        getFile("#{HOME}/evidence.zip")
+        runCommands(["zip -r #{HOME}/#{timestamp}-evidence.zip /evidence"])
+
+        getFile("#{HOME}/#{evidence_zip_filename}")
     end
 
     def sendFile(local_path, remote_path)
