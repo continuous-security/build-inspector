@@ -28,11 +28,11 @@ class VagrantWhisperer
         `vagrant ssh --command "rm #{dest_path}"`
     end
 
-    def collectEvidence
-        timestamp = Time.now.strftime("%Y%m%d%H%M%S")
-        evidence_zip_filename = "#{timestamp}-evidence.zip"
+    def collectEvidence(filename = '')
+        timestamp = Time.now.strftime('%Y%m%d%H%M%S')
+        evidence_zip_filename = "#{timestamp}-#{filename}-evidence.zip"
 
-        runCommands(["zip -r #{HOME}/#{timestamp}-evidence.zip /evidence"])
+        runCommands(["zip -r #{HOME}/#{evidence_zip_filename} /evidence"])
 
         getFile("#{HOME}/#{evidence_zip_filename}")
     end

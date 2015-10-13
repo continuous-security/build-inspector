@@ -27,13 +27,14 @@ if ARGV.size < 2
     exit -1
 end
 
-repo = ARGV[0]
+repo_url = ARGV[0]
+repo_name = repo_url.split('/').last.chomp('.git')
 build_cmd = ARGV[1]
 
 commands = []
 
 # Clone repo
-commands << "git clone #{repo} #{VagrantWhisperer::REPO_DIR}"
+commands << "git clone #{repo_url} #{VagrantWhisperer::REPO_DIR}"
 commands << "cd #{VagrantWhisperer::REPO_DIR}"
 
 # Add repo to backup so we can diff later
@@ -63,7 +64,7 @@ commands << %Q~ruby -e 'IO.readlines("/evidence/fs-diff.txt").each { |e| puts e;
 
 whisperer.runCommands(commands)
 
-whisperer.collectEvidence
+whisperer.collectEvidence(filename = repo_name)
 
 # parse pcap
 
