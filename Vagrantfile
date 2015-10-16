@@ -69,12 +69,18 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get install -y apache2
   # SHELL
 
-  config.vm.provision :file, :source => "snapshot-targets.txt", :destination => 'snapshot-targets.txt'
-  config.vm.provision :shell, :path => "pre-package-bootstrap.sh"
-  config.vm.provision :shell, :privileged => false, :path => "pre-package-bootstrap2.sh"
-  config.vm.provision :shell, :path => "pre-package-bootstrap3.sh"
+  PROVISIONING_DIR = 'provisioning'
+  ntp = 'ntp.conf'
+  sources = 'sources.list'
+  targets = 'snapshot-targets.txt'
+  config.vm.provision :file, source: File.join(PROVISIONING_DIR, targets), destination: targets
+  config.vm.provision :file, source: File.join(PROVISIONING_DIR, ntp), destination: ntp
+  config.vm.provision :file, source: File.join(PROVISIONING_DIR, sources), destination: sources
+  config.vm.provision :shell, path: File.join(PROVISIONING_DIR, 'pre-package-bootstrap.sh')
+  config.vm.provision :shell, privileged: false, path: File.join(PROVISIONING_DIR, 'pre-package-bootstrap2.sh')
+  config.vm.provision :shell, path: File.join(PROVISIONING_DIR, 'pre-package-bootstrap3.sh')
 
-  config.vm.provision :shell, :path => "bootstrap.sh"
+  config.vm.provision :shell, :path => File.join(PROVISIONING_DIR, 'bootstrap.sh')
 
   # Security!
   config.vm.synced_folder ".", "/vagrant", disabled: true
