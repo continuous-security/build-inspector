@@ -56,6 +56,11 @@ class VagrantWhisperer
         `#{cmd}`
     end
 
+    def ip_address
+      @ip_address ||= `vagrant ssh -c \"ip address show eth0 | grep 'inet ' | sed -e 's/^.*inet //' -e 's/\\/.*$//'\"`.strip
+      @ip_address
+    end
+
 private
 
     def parse_ssh_config(config)

@@ -1,0 +1,17 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    network_interface (0.0.1)
+    packetfu (1.1.11)
+      network_interface (~> 0.0)
+      pcaprub (~> 0.12)
+    pcaprub (0.12.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  packetfu
+
+BUNDLED WITH
+   1.10.6

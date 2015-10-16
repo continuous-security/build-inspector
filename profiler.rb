@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'optparse'
 require './vagrant_whisperer'
+require './packet_inspector'
 
 options = {
   :duration => 15,
@@ -49,11 +50,8 @@ commands << "sudo tcpdump -w #{VagrantWhisperer::EVIDENCE_DIR}/evidence.pcap -i 
 
 commands << build_cmd
 
-whisperer = VagrantWhisperer.new
-whisperer.runCommands(commands)
-
-puts "Should be sleeping for #{options[:duration]} minutes while we wait for build..."
-#sleep(options[:duration])
+$whisperer = VagrantWhisperer.new
+$whisperer.runCommands(commands)
 
 commands.clear
 commands << 'pkill tcpdump'
@@ -62,11 +60,45 @@ get_current_mirror = "`sudo rdiff-backup --list-increments #{VagrantWhisperer::B
 commands << "sudo rdiff-backup --include-filelist #{VagrantWhisperer::HOME}/snapshot-targets.txt --compare-at-time \"#{get_current_mirror}\" / #{VagrantWhisperer::BACKUP_DIR} > #{VagrantWhisperer::EVIDENCE_DIR}/fs-diff.txt"
 commands << %Q~ruby -e 'IO.readlines("/evidence/fs-diff.txt").each { |e| puts e; o,f = e.strip.split(": "); puts `diff -u /\#{f} /backup/\#{f}` if o.eql?("changed") && File.exists?("/"+f) && !File.directory?("/"+f)}' > #{VagrantWhisperer::EVIDENCE_DIR}/fs-diff-with-changes.txt~
 
-whisperer.runCommands(commands)
+$whisperer.runCommands(commands)
 
-whisperer.collectEvidence(filename = repo_name)
+$whisperer.collectEvidence(filename = repo_name)
 
-# parse pcap
+KILOBYTE = 1024.0
+
+def prettify(size)
+  return size.to_s + 'B' if size < 1000
+  (size / KILOBYTE).round(1).to_s + 'K'
+end
+
+def print_outgoing_connections
+  pcap_file = 'evidence.pcap'
+  $whisperer.getFile "#{VagrantWhisperer::EVIDENCE_DIR}/#{pcap_file}"
+
+  vagrant_ip = $whisperer.ip_address
+  packet_inspector = PacketInspector.new pcap_file
+  outgoing_packets = packet_inspector.packets_from vagrant_ip
+
+  ips_sizes = outgoing_packets.each_with_object(Hash.new(0)) do |packet, memo|
+    memo[packet.ip_dst_readable] += packet.size
+  end
+
+  dns_responses = packet_inspector.dns_responses
+  address_to_name = dns_responses.each_with_object({}) do |name_addresses, memo|
+    name = name_addresses.first
+    addresses = name_addresses.last
+    addresses.each { |address| memo[address.to_s] = name }
+  end
+
+  puts "The following hostnames were reached during the build process:"
+
+  ips_sizes.each do |ip, size|
+    name_ip = "#{address_to_name.fetch(ip, ip)} (#{ip})".ljust(60)
+    puts "  #{name_ip} #{prettify(size).rjust(10)}"
+  end
+end
+
+print_outgoing_connections
 
 # diff ps
 
