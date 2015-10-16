@@ -15,7 +15,7 @@ optparse = OptionParser.new do |opts|
   end
 
   opts.on('-d', '--duration #', Integer,
-    "Wait this long after building before stopping, in minutes, default=#{options[:duration]}") do |duration|
+          "Wait this long after building before stopping, in minutes, default=#{options[:duration]}") do |duration|
     options[:duration] = duration * 60
   end
 end
@@ -23,9 +23,9 @@ end
 optparse.parse!
 
 if ARGV.size < 2
-    puts "Must specifiy a repo URL and a build command"
-    puts optparse.help
-    exit -1
+  puts "Must specifiy a repo URL and a build command"
+  puts optparse.help
+  exit -1
 end
 
 repo_url = ARGV[0]
