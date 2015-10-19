@@ -55,7 +55,7 @@ After running, you'll have a file called `evidence.zip` which has all network ac
 ruby profiler.rb https://github.com/jsyeo/harmless-project.git "bundle install"
 ```
 
-This sinata project uses a malicious gem that uploads your machine's environment variables to firebase. After running, you should see an output printed to stdout showing a list of outgoing connections. It should show that the `bundle install` process connected to firebase.
+This sinata project uses a malicious gem that uploads your machine's environment variables to firebase. After running, you should see an output printed to stdout showing a list of outgoing connections. It should show that the `bundle install` step connected to firebase.
 
 ## Development
 When you want to experiment, just do `vagrant sandbox on`. Make all the changes you want to the image. If you'd like to keep them do `vagrant sandbox commit` and if you don't do `vagrant sandbox rollback`.
