@@ -1,3 +1,4 @@
 .vagrant
 evidence/
 *.zip
+*.pcap
