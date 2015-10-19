@@ -39,7 +39,8 @@ Usage profiler.rb [options] <git repo URL> <build command>
     -d, --duration #                 Wait this long after building before stopping, in minutes, default=15
 ```
 
-Example usage:
+### Gradle Example
+
 ```
 ruby profiler.rb https://github.com/CalebFenton/TotallyLegitApp.git "./gradlew build; ./gradlew backdoor"
 ```
@@ -47,6 +48,14 @@ ruby profiler.rb https://github.com/CalebFenton/TotallyLegitApp.git "./gradlew b
 The above project has a task called `backdoor` that adds a reverse connect shell to `~/.bashrc`.
 
 After running, you'll have a file called `evidence.zip` which has all network activity, file system changes, and any new processes. The guest OS is still running at this point, so you can inspect things further.
+
+### Bundler Example
+
+```
+ruby profiler.rb https://github.com/jsyeo/harmless-project.git "bundle install"
+```
+
+This sinata project uses a malicious gem that uploads your machine's environment variables to firebase. After running, you should see an output printed to stdout showing a list of outgoing connections. It should show that the `bundle install` process connected to firebase.
 
 ## Development
 When you want to experiment, just do `vagrant sandbox on`. Make all the changes you want to the image. If you'd like to keep them do `vagrant sandbox commit` and if you don't do `vagrant sandbox rollback`.
