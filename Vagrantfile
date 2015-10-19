@@ -76,7 +76,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision :file, source: File.join(PROVISIONING_DIR, targets), destination: targets
   config.vm.provision :file, source: File.join(PROVISIONING_DIR, ntp), destination: ntp
   config.vm.provision :file, source: File.join(PROVISIONING_DIR, sources), destination: sources
-  config.vm.provision :shell, path: File.join(PROVISIONING_DIR, 'pre-package-bootstrap.sh')
+  config.vm.provision :shell, path: File.join(PROVISIONING_DIR, 'pre-package-bootstrap.sh'), keep_color: true
   config.vm.provision :shell, privileged: false, path: File.join(PROVISIONING_DIR, 'pre-package-bootstrap2.sh')
   config.vm.provision :shell, path: File.join(PROVISIONING_DIR, 'pre-package-bootstrap3.sh')
 
@@ -84,4 +84,9 @@ Vagrant.configure(2) do |config|
 
   # Security!
   config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  config.vm.provider 'virtualbox' do |vb|
+    vb.customize ['modifyvm', :id, '--natdnsproxy1', 'off']
+    vb.customize ['modifyvm', :id, '--natdnshostresolver1', 'off']
+  end
 end

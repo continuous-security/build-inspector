@@ -3,3 +3,4 @@ rdiff-backup --include-filelist /home/vagrant/snapshot-targets.txt / /backup
 
 mkdir /evidence
 chown vagrant:vagrant /evidence
+echo 'all set, rock on!'
