@@ -1,5 +1,7 @@
 # Build Profiler
 
+Inspects network activities, file system changes and process creation when building a project.
+
 ## Requirements
 If you don't have `brew cask` installed, run this:
 ```
