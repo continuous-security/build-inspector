@@ -75,7 +75,6 @@ The whitelist file is simply a YAML file that looks like this:
 - bundler.rubygems.org
 - rubygems.org
 - rubygems.global.ssl.fastly.net
-- 
 ```
 
 There are examples for different build systems in the `whitelists` directory.
