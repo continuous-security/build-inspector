@@ -69,7 +69,8 @@ KILOBYTE = 1024.0
 WHITELIST = 'whitelist.yml'
 
 def whitelist
-  YAML.load_file 'whitelist.yml'
+  return {} if !File.exist? WHITELIST
+  YAML.load_file WHITELIST
 end
 
 def prettify(size)
