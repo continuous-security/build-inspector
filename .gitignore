@@ -2,4 +2,4 @@
 evidence/
 *.zip
 *.pcap
-.whitelist
+whitelist.yml
