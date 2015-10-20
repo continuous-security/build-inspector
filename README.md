@@ -35,6 +35,7 @@ vagrant sandbox rollback
 ```
 
 ## Usage
+
 ```
 Usage profiler.rb [options] <git repo URL> <build command>
     -h, --help                       Display this screen
@@ -54,10 +55,31 @@ After running, you'll have a file called `evidence.zip` which has all network ac
 ### Bundler Example
 
 ```
+cp whitelists/bundler_whitelist.yml whitelist.yml
 ruby profiler.rb https://github.com/jsyeo/harmless-project.git "bundle install"
 ```
 
 This sinata project uses a malicious gem that uploads your machine's environment variables to firebase. After running, you should see an output printed to stdout showing a list of outgoing connections. It should show that the `bundle install` step connected to firebase.
+
+### Whitelisting host names
+
+The tool monitors all network activities and shows a list of outgoing connections to the user.
+To ignore host names and ip addresses, simply add them to `whitelist.yml`.
+The whitelist file is simply a YAML file that looks like this:
+
+```
+---
+
+- 10.0.2.2
+- 8.8.8.8
+- bundler.rubygems.org
+- rubygems.org
+- rubygems.global.ssl.fastly.net
+- 
+```
+
+There are examples for different build systems in the `whitelists` directory.
+You may copy the approriate whitelist for your build system to the root of this project or you may write one from scratch.
 
 ## Development
 When you want to experiment, just do `vagrant sandbox on`. Make all the changes you want to the image. If you'd like to keep them do `vagrant sandbox commit` and if you don't do `vagrant sandbox rollback`.

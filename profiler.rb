@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require 'optparse'
+require 'yaml'
 require './vagrant_whisperer'
 require './packet_inspector'
 
@@ -65,6 +66,11 @@ $whisperer.runCommands(commands)
 $whisperer.collectEvidence(filename = repo_name)
 
 KILOBYTE = 1024.0
+WHITELIST = 'whitelist.yml'
+
+def whitelist
+  YAML.load_file 'whitelist.yml'
+end
 
 def prettify(size)
   return size.to_s + 'B' if size < 1000
@@ -72,6 +78,7 @@ def prettify(size)
 end
 
 def print_outgoing_connections
+  puts "Downloading pcap file from vagrant image..."
   pcap_file = 'evidence.pcap'
   $whisperer.getFile "#{VagrantWhisperer::EVIDENCE_DIR}/#{pcap_file}"
 
@@ -93,7 +100,9 @@ def print_outgoing_connections
   puts "The following hostnames were reached during the build process:"
 
   ips_sizes.each do |ip, size|
-    name_ip = "#{address_to_name.fetch(ip, ip)} (#{ip})".ljust(60)
+    host = address_to_name.fetch(ip, ip)
+    next if whitelist.include? host
+    name_ip = "#{host} (#{ip})".ljust(60)
     puts "  #{name_ip} #{prettify(size).rjust(10)}"
   end
 end

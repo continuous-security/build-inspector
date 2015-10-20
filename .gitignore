@@ -2,3 +2,4 @@
 evidence/
 *.zip
 *.pcap
+.whitelist
