@@ -1,4 +1,6 @@
 mv /home/vagrant/sources.list /etc/apt/sources.list
+service puppet stop
+service chef-client stop
 apt-add-repository ppa:brightbox/ruby-ng
 apt-get update
 apt-get install -y build-essential git-core zlib1g-dev libssl-dev \
