@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'optparse'
 require 'yaml'
+require 'resolv'
 require './vagrant_whisperer'
 require './packet_inspector'
 
@@ -99,6 +100,10 @@ def print_outgoing_connections
   end
 
   puts "The following hostnames were reached during the build process:"
+
+  # whitelist the dns' ip as we wouldn't want it to show up
+  dns_server = Resolv::DNS::Config.default_config_hash[:nameserver]
+  whitelist = whitelist + dns_server if dns_server
 
   ips_sizes.each do |ip, size|
     host = address_to_name.fetch(ip, ip)
