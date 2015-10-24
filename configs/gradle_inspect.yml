@@ -1,0 +1,45 @@
+---
+
+# Configuration goes here
+
+# Hosts that you want to ignore
+whitelist:
+  - 10.0.2.2 # Virtualbox host machine's address
+  - services.gradle.org
+  - downloads.gradle.org
+  - repo1.maven.org
+
+# Directories that you want to include or exclude from the inspection
+directories:
+  excluded:
+    - /dev
+    - /lost+found
+    - /media
+    - /mnt
+    - /proc
+    - /run
+    - /sys
+    - /tmp
+    - /vagrant
+    - /var/lock
+    - /var/run
+    - /var/tmp
+    - /var/log
+    - /backup
+    - /evidence
+    - /home/vagrant/tmp_runCommands.sh
+    - /home/vagrant/repo
+    - /home/vagrant/.gradle
+  included:
+    - /bin
+    - /boot
+    - /etc
+    - /home
+    - /lib
+    - /opt
+    - /root
+    - /sbin
+    - /selinux
+    - /srv
+    - /usr
+    - /var
