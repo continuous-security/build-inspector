@@ -10,7 +10,7 @@ options = {
 }
 
 optparse = OptionParser.new do |opts|
-  opts.banner = "Usage #{File.basename($0)} [options] <git repo URL> <build command>"
+  opts.banner = "Usage #{File.basename($0)} [options] <git repo URL>"
   opts.on('-h', '--help', 'Display this screen') do
     puts opts
     exit
@@ -24,15 +24,14 @@ end
 
 optparse.parse!
 
-if ARGV.size < 2
-  puts "Must specifiy a repo URL and a build command"
+if ARGV.size < 1
+  puts 'Must specifiy a repo URL'
   puts optparse.help
   exit -1
 end
 
 repo_url = ARGV[0]
 repo_name = repo_url.split('/').last.chomp('.git')
-build_cmd = ARGV[1]
 
 commands = []
 
@@ -62,7 +61,8 @@ commands << "ps --sort=lstart -eott,cmd > #{VagrantWhisperer::EVIDENCE_DIR}/ps-b
 commands << 'echo "Starting network monitoring ..."'
 commands << "sudo tcpdump -w #{VagrantWhisperer::EVIDENCE_DIR}/evidence.pcap -i eth0 &disown"
 
-commands << build_cmd
+# script can be a string or an array of strings
+commands = (commands + [$config.script]).flatten
 
 $whisperer.runCommands(commands)
 

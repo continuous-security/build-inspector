@@ -2,6 +2,8 @@
 
 # Configuration goes here
 
+script: gradle build
+
 # Hosts that you want to ignore
 whitelist:
   - 10.0.2.2 # Virtualbox host machine's address

@@ -3,16 +3,16 @@ require 'yaml'
 class Config
   CONFIG = '.inspect.yml'
 
-  attr_reader :whitelist
-
   def initialize
-    @whitelist, @excluded, @included = [], [], []
-    return if !File.exist? CONFIG
+    @config = YAML.load_file(CONFIG)if File.exist? CONFIG
+    @config ||= {}
+    @config['directories'] ||= {}
+    @excluded = @config['directories'].fetch('excluded', [])
+    @included = @config['directories'].fetch('included', [])
+  end
 
-    @config = YAML.load_file CONFIG
-    @whitelist = @config['whitelist']
-    @excluded = @config['directories']['excluded']
-    @included = @config['directories']['included']
+  def method_missing(sym, *args, &block)
+    @config[sym.to_s]
   end
 
   # Returns a string representing a list of files and directories
