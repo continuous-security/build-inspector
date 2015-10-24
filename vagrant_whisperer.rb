@@ -23,7 +23,9 @@ class VagrantWhisperer
     # Stream output as we get it
     $stdout.sync = true
     args = ['vagrant', 'ssh', '--command', "./#{file_path}"]
-    IO.popen(args) { |f| puts f.gets until f.eof? }
+    IO.popen(args) do |f|
+      puts f.gets until f.eof?
+    end
 
     `vagrant ssh --command "rm #{dest_path}"`
   end

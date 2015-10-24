@@ -26,3 +26,5 @@
 - /backup
 - /evidence
 - /home/vagrant/tmp_runCommands.sh
+- /home/vagrant/repo
+- /home/vagrant/.gradle

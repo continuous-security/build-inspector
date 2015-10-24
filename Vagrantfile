@@ -71,9 +71,9 @@ Vagrant.configure(2) do |config|
 
   PROVISIONING_DIR = 'provisioning'
   sources = 'sources.list'
-  targets = 'snapshot-targets.txt'
-  config.vm.provision :file, source: File.join(PROVISIONING_DIR, targets), destination: targets
+  env = 'environment'
   config.vm.provision :file, source: File.join(PROVISIONING_DIR, sources), destination: sources
+  config.vm.provision :file, source: File.join(PROVISIONING_DIR, env), destination: env
   config.vm.provision :shell, path: File.join(PROVISIONING_DIR, 'pre-package-bootstrap.sh'), keep_color: true
   config.vm.provision :shell, privileged: false, path: File.join(PROVISIONING_DIR, 'pre-package-bootstrap2.sh')
   config.vm.provision :shell, path: File.join(PROVISIONING_DIR, 'pre-package-bootstrap3.sh')

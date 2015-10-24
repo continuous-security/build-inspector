@@ -1,4 +1,7 @@
+set -e
 mv /home/vagrant/sources.list /etc/apt/sources.list
+mv /home/vagrant/environment /etc/environment
+echo "Stopping puppet and chef"
 service puppet stop
 service chef-client stop
 echo "Adding brightbox's ruby repository"
@@ -12,6 +15,3 @@ apt-get install -y build-essential git-core zlib1g-dev libssl-dev \
   libcurl4-openssl-dev libffi-dev openjdk-7-jdk
 echo "Switching to ruby2.2"
 ruby-switch --set ruby2.2
-echo "gem: --no-ri --no-rdoc" >> /etc/gemrc
-echo "Installing bundler"
-gem install bundler
