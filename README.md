@@ -1,6 +1,6 @@
-# Build Profiler
+# Build Inspector
 
-Inspects network activities, file system changes and process creation when building a project.
+A tool to inspects network activities, file system changes and processes when building a project.
 
 ## Requirements
 If you don't have `brew cask` installed, run this:
