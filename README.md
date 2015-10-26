@@ -46,7 +46,7 @@ Usage profiler.rb [options] <git repo URL> <build command>
 
 ```
 cp configs/gradle_inspect.yml .inspect.yml
-ruby profiler.rb https://github.com/CalebFenton/TotallyLegitApp.git "./gradlew build; ./gradlew backdoor"
+ruby profiler.rb https://github.com/CalebFenton/TotallyLegitApp.git
 ```
 
 The above project has a task called `backdoor` that adds a reverse connect shell to `~/.bashrc`.
@@ -57,7 +57,7 @@ After running, you'll have a file called `evidence.zip` which has all network ac
 
 ```
 cp configs/bundler_inspect.yml .inspect.yml
-ruby profiler.rb https://github.com/jsyeo/harmless-project.git "bundle install"
+ruby profiler.rb https://github.com/jsyeo/harmless-project.git
 ```
 
 This sinata project uses a malicious gem that uploads your machine's environment variables to firebase. After running, you should see an output printed to stdout showing a list of outgoing connections. It should show that the `bundle install` step connected to firebase.
@@ -71,12 +71,14 @@ The `.inspect.yml' file is simply a YAML file that looks like this:
 ```
 ---
 
+script: bundle install --jobs 2
+
 whitelist:
-- 10.0.2.2
-- 8.8.8.8
-- bundler.rubygems.org
-- rubygems.org
-- rubygems.global.ssl.fastly.net
+  - 10.0.2.2
+  - 8.8.8.8
+  - bundler.rubygems.org
+  - rubygems.org
+  - rubygems.global.ssl.fastly.net
 
 directories:
   excluded:
