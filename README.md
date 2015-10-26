@@ -1,8 +1,12 @@
 # Build Inspector
 
-A tool to inspects network activities, file system changes and processes when building a project.
+A tool to inspects network activities, file system changes and running processes when building a project.
 
 ## Requirements
+
+- Vagrant
+- Ruby
+
 If you don't have `brew cask` installed, run this:
 ```
 brew tap phinze/homebrew-cask && brew install brew-cask
@@ -52,15 +56,6 @@ ruby profiler.rb https://github.com/CalebFenton/TotallyLegitApp.git
 The above project has a task called `backdoor` that adds a reverse connect shell to `~/.bashrc`.
 
 After running, you'll have a file called `evidence.zip` which has all network activity, file system changes, and any new processes. The guest OS is still running at this point, so you can inspect things further.
-
-### Bundler Example
-
-```
-cp configs/bundler_inspect.yml .inspect.yml
-ruby profiler.rb https://github.com/jsyeo/harmless-project.git
-```
-
-This sinata project uses a malicious gem that uploads your machine's environment variables to firebase. After running, you should see an output printed to stdout showing a list of outgoing connections. It should show that the `bundle install` step connected to firebase.
 
 ### Configuration
 
