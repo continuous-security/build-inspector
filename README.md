@@ -22,6 +22,12 @@ This tool also makes use of the `sahara` plugin for snapshots. Install with this
 vagrant plugin install sahara
 ```
 
+Lastly, install the tool's dependencies.
+
+```
+bundle install
+```
+
 ## Running
 First, clone this repo and move inside the repo directory. Since this tool does not manage vagrant for you, yet, you'll have to do it yourself. This step will take a while the first time, but won't be necessary again. Eventually, this step will be eliminated. Start vagrant and build the image:
 ```
