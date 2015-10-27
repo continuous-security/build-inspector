@@ -3,7 +3,7 @@ require 'optparse'
 require 'resolv'
 require './vagrant_whisperer'
 require './packet_inspector'
-require './config'
+require './inspect_config'
 
 options = {
   :duration => 15,
@@ -40,7 +40,7 @@ commands << "git clone #{repo_url} #{VagrantWhisperer::REPO_DIR}"
 commands << "cd #{VagrantWhisperer::REPO_DIR}"
 
 
-$config = Config.new
+$config = InspectConfig.new
 $whisperer = VagrantWhisperer.new
 
 # Upload filelist of directories to include and exclude for rdiff-backup

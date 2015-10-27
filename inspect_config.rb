@@ -1,6 +1,6 @@
 require 'yaml'
 
-class Config
+class InspectConfig
   CONFIG = '.inspect.yml'
 
   def initialize
