@@ -73,7 +73,8 @@ class VagrantWhisperer
       ssh_opts[k] = v
     end
 
-    ssh_opts
+    # Remove Host directive as it doesn't work on some systems
+    ssh_opts.tap { |opts| opts.delete('Host') }
   end
 
 end
