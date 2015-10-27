@@ -1,6 +1,7 @@
 set -e
 mv /home/vagrant/sources.list /etc/apt/sources.list
 mv /home/vagrant/environment /etc/environment
+mv /home/vagrant/sshd /etc/pam.d/sshd
 echo "Stopping puppet and chef"
 service puppet stop
 service chef-client stop
